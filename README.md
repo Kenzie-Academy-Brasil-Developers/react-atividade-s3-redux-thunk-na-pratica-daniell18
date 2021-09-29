@@ -1,121 +1,70 @@
-# 📋 Sobre a atividade
+# Getting Started with Create React App
 
-O objetivo dessa atividade é criar o nosso primeiro redux com o middleware, redux thunk.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-A ideia é termos um user, e adicionar comentários para ele através do redux thunk, o importante é entendermos a estrutura e funcionamento do thunk em um exemplo básico.
+## Available Scripts
 
-# ℹ️ Informações úteis
+In the project directory, you can run:
 
-## Resultado final
+### `yarn start`
 
-![](https://media3.giphy.com/media/Ge4XO6A2BJJ8QPPGsE/giphy.gif?cid=790b761196ac6d08933063f0c2ed5bb5f8ff9b694f958f6c&rid=giphy.gif&ct=g)
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-## Mão na massa!
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
 
-1.  Com um projeto novo criado, vamos instalar as nossas dependências:
+### `yarn test`
 
-        yarn add redux react-redux redux-thunk
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-2.  Hora de estruturar as pastas do projeto:
+### `yarn build`
 
-    ![](https://i.ibb.co/1X3qPKK/Captura-de-tela-de-2021-07-25-18-42-36.png)
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-    Observe que agora temos um arquivo `thunks.js` dentro `modules/user`.
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-3.  Agora vamos configurar cada um dos arquivos criados para o redux thunk funcionar. Começando pelo `reducer.js`.
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-        import { ADD_COMMENT } from "./actionTypes";
+### `yarn eject`
 
-        const initialState = { name: "Kenzie", comments: [] };
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-        const userReducer = (state = initialState, action) => {
-          switch (action.type) {
-            case ADD_COMMENT:
-        	// Lembre de fluxo da aula anterior, essa action chega aqui depois de passar pelo thunks
-              return action.updatedUser;
-            default:
-              return state;
-          }
-        };
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-        export default userReducer;
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-4.  Vamos arrumar o `actionTypes.js` que já foi importado no reducer. É muito simples.
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-        export const ADD_COMMENT = "ADD_COMMENT";
+## Learn More
 
-5.  Passando para a configuração do `action.js`.
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-        import { ADD_COMMENT } from "./actionTypes";
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-        export const addComment = (updatedUser) => ({
-          type: ADD_COMMENT,
-          updatedUser,
-        });
+### Code Splitting
 
-6.  Com os arquivos que conhecemos configurados, veja como fica o `thunks.js`.
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-        import { addComment } from "./actions";
+### Analyzing the Bundle Size
 
-        // o comment é o que recebemos de fora, no caso será o comentário
-        export const addCommentThunk = (comment) => {
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-        	// No thunk retornamos uma função anonima
-          return (dispatch, getState) => {
+### Making a Progressive Web App
 
-        	// aqui estamos pegando o state user 
-            const { user } = getState();
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-        	// aqui adicionamos o comentário que entrou como parâmetro lá em cima
-            const updatedUser = { ...user, comments: [...user.comments, comment] };
+### Advanced Configuration
 
-        	// nessa linha damos o dispatch na nossa action, com a alteração feita
-            dispatch(addComment(updatedUser));
-          };
-        };
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-    *   Lembre-se que o thunk é uma camada a mais no processo. Então o dado está sendo processado e entrará no reducer após essa mudança.
-    *   Perceba que o thunk possui o seu próprio dispatch.
-    *   o getState é uma função que possibilita acessar os states declarados na store.
-7.  O index.js da store também precisa sofrer algumas alterações:
+### Deployment
 
-        // adicionamos o applyMiddleweare do próprio redux
-        import { createStore, combineReducers, applyMiddleware } from "redux";
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-        // também adicionamos o thunk 
-        import thunk from "redux-thunk";
+### `yarn build` fails to minify
 
-        import userReducer from "./modules/user/reducer";
-
-        const reducers = combineReducers({ user: userReducer });
-
-        // além do reducers, colocamos o applyMiddleware passando o thunk
-        const store = createStore(reducers, applyMiddleware(thunk));
-
-        export default store;
-
-8.  Por fim precisamos entender como vamos disparar essa ação na aplicação para adicionar um comentário. Vamos simular um botão que adiciona um comentário.
-
-        // 1 - importe o useDispatch 
-        import { useDispatch } from "react-redux";
-
-        // 2 - importe o seu thunk
-        import { addCommentThunk } from "./store/modules/user/thunks";
-
-        // 3 - dentro do seu componente faça o dispatch do thunk, passando o comentário
-        <button onClick={() => dispatch(addCommentThunk("Primeiro comentário!"))}>
-        new comment
-        </button>
-
-    *   Repare, que disparamos a informação para o thunk, lá vamos processar ela, e depois enviaremos para o reducer, fechando o ciclo.
-9.  Não esqueça de no `index.js` de `src`, a configuração do `Provider` e `store`.
-
-Aqui terminamos a primeira configuração de redux com thunk. Para complementar:
-
-*   Crie um **input** para pegar o valor digitado.
-*   Com o **botão** envie os comentários capturados no input.
-*   Renderize na tela o **user** com os **comentários**
-
-# 💡Conhecimentos aplicados:
-
-*   Redux Thunk
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
