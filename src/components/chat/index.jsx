@@ -63,10 +63,11 @@ function Chat() {
   const classe = useStyles();
   const dispatch = useDispatch();
   const handleComment = () => {
-    dispatch(addCommentThunk(txt));
+    if (txt !== "" && txt) {
+      dispatch(addCommentThunk(txt));
+    }
   };
   const comment = useSelector((state) => state.user);
-  console.log(comment);
 
   return (
     <>
@@ -77,8 +78,10 @@ function Chat() {
             <p>{comment.name}</p>
           </div>
           <div>
-            {comment.comments.map((Element) => (
-              <h3 className={classe.txt}>{Element}</h3>
+            {comment.comments.map((Element, index) => (
+              <div key={index}>
+                <h3 className={classe.txt}>{Element}</h3>
+              </div>
             ))}
           </div>
           <div className={classe.send}>
